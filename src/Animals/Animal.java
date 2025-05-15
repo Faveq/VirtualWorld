@@ -69,7 +69,7 @@ public class Animal extends Organism {
         Point shift = new Point(0, 0);
         Organism collidingOrganism;
 
-        //if (!getGraphicRepresentation().equals(WOLF_GRAPHIC_REPRESENTATION)) {
+//        if (!getGraphicRepresentation().equals(Constants.WOLF_GRAPHIC_REPRESENTATION)) {
         do {
             Random random = new Random();
             int randomX = (random.nextInt(2 * range + 1)) - range;
@@ -86,7 +86,7 @@ public class Animal extends Organism {
                 (hasGoodSmell() && collidingOrganism != null && collidingOrganism.compareTo(this) > 0));
 
         move(shift);
-        //}
+//        }
     }
 
     protected void randomMove() {
@@ -109,6 +109,14 @@ public class Animal extends Organism {
             }
         }
 
+        if (this instanceof Animal && this.getGraphicRepresentation() == Constants.CYBER_SHEEP_GRAPHIC_REPRESENTATION) {
+            if (enemy.getGraphicRepresentation() == Constants.HOGEWEED_OF_PINE_GRAPHIC_REPRESENTATION)
+            {
+                enemy.kill();
+                return;
+            }
+        }
+
         if (this.isAlive() && enemy.isAlive()) {
             // strength comparison
             if (this.compareTo(enemy) < 0) {
@@ -124,7 +132,7 @@ public class Animal extends Organism {
 
                 int thisAge = getAge();
                 int enemyAge = enemy.getAge();
-                getWorld().addLog("Round: " + getWorld().getRoundNumber() + "-> organism " + this.toString() + " age " + thisAge + " was killed by " + enemy.toString() + " age " + enemyAge);
+                getWorld().addLog("Round: " + getWorld().getRoundNumber() + "-> organism " + this.toString() + " age " + this.getAge() + " strength "+ enemy.getStrength() + " was killed by " + enemy.toString() + " age " + enemy.getAge() + " strength "+ enemy.getStrength());
                 addEffect(enemy);
                 this.kill();
             } else if (this.compareTo(enemy) > 0) {
@@ -140,7 +148,7 @@ public class Animal extends Organism {
 
                 int thisAge = getAge();
                 int enemyAge = enemy.getAge();
-                getWorld().addLog("Round: " + getWorld().getRoundNumber() + "-> organism " + enemy.toString() + " age " + enemyAge + " was killed by " + this.toString() + " age " + thisAge);
+                getWorld().addLog("Round: " + getWorld().getRoundNumber() + "-> organism " + enemy.toString() + " age "+ enemy.getAge() + " strength "+ enemy.getStrength()  + " was killed by " + this.toString() + " age " + this.getAge()+ " strength "+ enemy.getStrength() );
                 enemy.addEffect(this);
                 enemy.kill();
             } else {

@@ -102,6 +102,10 @@ public abstract class Organism {
 
     public abstract void resetReproduction();
 
+
+    // -1 if this < other
+    // 0 if this == other
+    // 1 if this > other
     public int compareTo(Organism other) {
         return Integer.compare(this.strength, other.strength);
     }

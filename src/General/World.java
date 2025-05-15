@@ -133,7 +133,6 @@ public class World {
 
     public void removeOrganism(Organism organism) {
         organisms.remove(organism);
-        // Note: In Java, we don't need to explicitly delete the organism
     }
 
     public void handleHumanMovement() {
@@ -247,9 +246,12 @@ public class World {
                 Organism collidingOrganism = getOrganismAt(newPosition);
 
                 if (collidingOrganism != null && collidingOrganism != organism) {
-                    if (collidingOrganism.compareTo(organism) < 0) {
+                    if (organism.compareTo(collidingOrganism) > 0) {
                         return false;
                     }
+                }else if (collidingOrganism == null)
+                {
+                    return false;
                 }
             }
         }
@@ -282,7 +284,7 @@ public class World {
     }
 
     public void printLogs() {
-        System.out.println("Logs:");
+        System.out.println("==Round logs=========================================================================================");
         for (String log : logs) {
             System.out.println(log);
         }
@@ -303,15 +305,16 @@ public class World {
 
         removeBodies();
 
-        drawWorld();
-        handleHumanMovement();
+//        drawWorld();
+        printLogs();
+//        handleHumanMovement();
 
         // Sleep equivalent in Java
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(50);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void updateSpecialState() {
