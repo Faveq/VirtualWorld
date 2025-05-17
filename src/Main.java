@@ -14,12 +14,9 @@ public class Main {
 
         int width = 25;
         int height = 15;
-        int maxRounds = 2000;
 
-        // Zastępuje std::srand(std::time(nullptr))
         Random random = new Random(System.currentTimeMillis());
 
-        // Tworzenie listy organizmów
         ArrayList<Organism> organisms = new ArrayList<>();
 
         //organisms.add(new CyberSheep(new Point(0, 0)));
@@ -36,8 +33,9 @@ public class Main {
 //        organisms.add(new Fox(new Point(12, 9)));
 //        organisms.add(new Grass(new Point(15, 9)));
 //        organisms.add(new Human(new Point(5, 9)));
-        organisms.add(new Fox(new Point(0, 1)));
-        organisms.add(new Fox(new Point(11, 11)));
+//        organisms.add(new Fox(new Point(0, 1)));
+//        organisms.add(new Fox(new Point(11, 11)));
+//        organisms.add(new Human(new Point(15, 2)));
 //       organisms.add(new Fox(new Point(1, 0)));
 //       organisms.add(new Fox(new Point(1, 0)));
 //       organisms.add(new Antylope(new Point(10, 0)));

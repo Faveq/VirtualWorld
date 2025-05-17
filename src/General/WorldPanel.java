@@ -11,6 +11,14 @@ public class WorldPanel extends JPanel {
     private final JLabel turnLabel;
     private Point selectedCell = null;
 
+    // Nowe pola klasowe
+    private JPanel buttonPanel;
+    private JPanel dpadPanel;
+    private JButton nextTurnButton;
+    private JButton saveButton;
+    private JButton loadButton;
+    private JButton specialButton; // Dodany przycisk specjalnej umiejętności
+
     public WorldPanel(World world) {
         this.world = world;
         setLayout(new BorderLayout());
@@ -49,10 +57,13 @@ public class WorldPanel extends JPanel {
 
         turnLabel = new JLabel("Tura: " + world.getRoundNumber());
 
-        JPanel buttonPanel = new JPanel();
-        JButton nextTurnButton = new JButton("Następna tura");
-        JButton saveButton = new JButton("Zapis");
-        JButton loadButton = new JButton("Wczytanie");
+        // Inicjalizacja paneli i przycisków
+        buttonPanel = new JPanel();
+        nextTurnButton = new JButton("Następna tura");
+        saveButton = new JButton("Zapis");
+        loadButton = new JButton("Wczytanie");
+        dpadPanel = createDPadPanel();
+        specialButton = new JButton("Specjalna umiejętność"); // Inicjalizacja przycisku
 
         buttonPanel.add(Box.createHorizontalGlue());
         buttonPanel.add(turnLabel);
@@ -60,6 +71,7 @@ public class WorldPanel extends JPanel {
         nextTurnButton.addActionListener(e -> {
             world.handleNextTurn();
             turnLabel.setText("Tura: " + world.getRoundNumber());
+            updateControlPanel();
             repaint();
         });
 
@@ -70,16 +82,44 @@ public class WorldPanel extends JPanel {
         loadButton.addActionListener(e -> {
             world.loadGame();
             turnLabel.setText("Tura: " + world.getRoundNumber());
+            updateControlPanel();
             repaint();
             JOptionPane.showMessageDialog(this, "Gra została wczytana!", "Wczytanie gry", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        buttonPanel.add(nextTurnButton);
-        buttonPanel.add(saveButton);
-        buttonPanel.add(loadButton);
+        // Obsługa przycisku specjalnej umiejętności
+        specialButton.addActionListener(e -> {
+            world.setHumanNextMove(HumanMove.SPECIAL);
+            world.handleNextTurn();
+            turnLabel.setText("Tura: " + world.getRoundNumber());
+            updateControlPanel();
+            repaint();
+        });
+
+        // Ustaw początkowy stan panelu sterowania
+        updateControlPanel();
 
         add(gridPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    // Nowa metoda do dynamicznej aktualizacji panelu sterowania
+    private void updateControlPanel() {
+        buttonPanel.remove(nextTurnButton);
+        buttonPanel.remove(dpadPanel);
+        buttonPanel.remove(specialButton);
+
+        if (!world.isHumanAlive()) {
+            buttonPanel.add(nextTurnButton, 1); // po turnLabel
+        } else {
+            buttonPanel.add(dpadPanel, 1); // po turnLabel
+            buttonPanel.add(specialButton, 2); // po dpadPanel
+        }
+        if (saveButton.getParent() != buttonPanel) buttonPanel.add(saveButton);
+        if (loadButton.getParent() != buttonPanel) buttonPanel.add(loadButton);
+
+        buttonPanel.revalidate();
+        buttonPanel.repaint();
     }
 
     private void drawGrid(Graphics g) {
@@ -90,6 +130,53 @@ public class WorldPanel extends JPanel {
                 g.drawRect(x, y, cellSize, cellSize);
             }
         }
+    }
+
+    private JPanel createDPadPanel() {
+        JPanel dpad = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(2, 2, 2, 2);
+
+        JButton up = new JButton("↑");
+        JButton down = new JButton("↓");
+        JButton left = new JButton("←");
+        JButton right = new JButton("→");
+
+        up.addActionListener(e -> {
+            world.setHumanNextMove(HumanMove.UP);
+            world.handleNextTurn();
+            turnLabel.setText("Tura: " + world.getRoundNumber());
+            updateControlPanel();
+            repaint();
+        });
+        down.addActionListener(e -> {
+            world.setHumanNextMove(HumanMove.DOWN);
+            world.handleNextTurn();
+            turnLabel.setText("Tura: " + world.getRoundNumber());
+            updateControlPanel();
+            repaint();
+        });
+        left.addActionListener(e -> {
+            world.setHumanNextMove(HumanMove.LEFT);
+            world.handleNextTurn();
+            turnLabel.setText("Tura: " + world.getRoundNumber());
+            updateControlPanel();
+            repaint();
+        });
+        right.addActionListener(e -> {
+            world.setHumanNextMove(HumanMove.RIGHT);
+            world.handleNextTurn();
+            turnLabel.setText("Tura: " + world.getRoundNumber());
+            updateControlPanel();
+            repaint();
+        });
+
+        c.gridx = 1; c.gridy = 0; dpad.add(up, c);
+        c.gridx = 0; c.gridy = 1; dpad.add(left, c);
+        c.gridx = 2; c.gridy = 1; dpad.add(right, c);
+        c.gridx = 1; c.gridy = 2; dpad.add(down, c);
+
+        return dpad;
     }
 
     private void drawOrganisms(Graphics g) {
@@ -110,18 +197,14 @@ public class WorldPanel extends JPanel {
         }
     }
 
-    // Modal z wyborem organizmu
-
     private void showOrganismModal(int x, int y) {
         JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Dodaj organizm", true);
         dialog.setLayout(new GridLayout(0, 3, 5, 5)); // Siatka z 3 kolumnami
         dialog.getContentPane().setBackground(Color.WHITE);
-//        dialog.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Pełna lista wszystkich organizmów
         String[] organismNames = {
-                "Fox", "Antylope", "Wolf", "Turtle", "Sheep", "CyberSheep",
-                "Grass", "Guarana", "MilkWeed", "NightshadeBerries", "HogweedOfPine"
+                "Human","Fox", "Antylope", "Wolf", "Turtle", "Sheep", "CyberSheep",
+                "Grass", "Guarana", "MilkWeed", "NightshadeBerries", "HogweedOfPine",
         };
 
         for (String name : organismNames) {
@@ -129,18 +212,15 @@ public class WorldPanel extends JPanel {
             organismPanel.setBackground(Color.WHITE);
             organismPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-            // Pobieranie obrazka
             String imgPath = "/resources/" + name + ".png";
             ImageIcon icon = null;
             java.net.URL imgUrl = getClass().getResource(imgPath);
             if (imgUrl != null) {
                 icon = new ImageIcon(imgUrl);
-                // Skalowanie obrazka jeśli potrzeba
                 Image image = icon.getImage();
                 Image scaledImage = image.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
                 icon = new ImageIcon(scaledImage);
             } else {
-                // Placeholder jeśli brak obrazka
                 icon = new ImageIcon();
             }
 
@@ -151,14 +231,12 @@ public class WorldPanel extends JPanel {
             btn.setBorderPainted(false);
             btn.setFocusPainted(false);
 
-            // Etykieta z nazwą pod obrazkiem
             JLabel nameLabel = new JLabel(name, JLabel.CENTER);
             nameLabel.setFont(new Font("Arial", Font.PLAIN, 10));
 
             organismPanel.add(btn, BorderLayout.CENTER);
             organismPanel.add(nameLabel, BorderLayout.SOUTH);
 
-            // Obsługa kliknięcia
             btn.addActionListener(e -> {
                 Organism org = createOrganismByName(name, new Point(x, y));
                 if (org != null) {
@@ -172,7 +250,6 @@ public class WorldPanel extends JPanel {
             dialog.add(organismPanel);
         }
 
-        // Przycisk do zamknięcia modalu
         JPanel closePanel = new JPanel(new BorderLayout());
         closePanel.setBackground(Color.WHITE);
         JButton closeButton = new JButton("Anuluj");
@@ -187,9 +264,8 @@ public class WorldPanel extends JPanel {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-    // Pomocnicza metoda do tworzenia organizmów po nazwie
-    private Organism createOrganismByName(String name, Point pos) {
 
+    private Organism createOrganismByName(String name, Point pos) {
         Organism org = null;
         org = world.getOrganismAt(pos);
 
@@ -198,6 +274,13 @@ public class WorldPanel extends JPanel {
         }
 
         switch (name) {
+            case "Human":
+                if (!world.isHumanAlive()) {
+                    return new Animals.Human(pos, 0, world);
+                } else {
+                    JOptionPane.showMessageDialog(this, "W świecie znajduje się już człowiek", "Błąd", JOptionPane.INFORMATION_MESSAGE);
+                    return null;
+                }
             case "Fox": return new Animals.Fox(pos, 0 ,world);
             case "Antylope": return new Animals.Antylope(pos, 0 ,world);
             case "Grass": return new Plants.Grass(pos, 0 ,world);
@@ -209,6 +292,7 @@ public class WorldPanel extends JPanel {
             case "Sheep": return new Animals.Sheep(pos, 0 ,world);
             case "CyberSheep": return new Animals.CyberSheep(pos, 0 ,world);
             case "HogweedOfPine": return new Plants.HogweedOfPine(pos, 0 ,world);
+
             default: return null;
         }
     }

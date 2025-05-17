@@ -12,6 +12,7 @@ public class World {
     private boolean isSpecialActive = false;
     private boolean isSpecialReady = true;
     private int specialMoveRound = 0;
+    private boolean isHumanAlive = false;
     private ArrayList<String> logs;
     private ArrayList<Organism> organisms;
 
@@ -25,6 +26,14 @@ public class World {
         Random random = new Random(System.currentTimeMillis());
     }
 
+    boolean isHumanAlive() {
+        return this.isHumanAlive;
+    }
+
+    public void setIsHumanAlive(boolean isHumanAlive) {
+        this.isHumanAlive = isHumanAlive;
+    }
+
     public World(int width, int height, ArrayList<Organism> organisms) {
         this.width = width;
         this.height = height;
@@ -33,6 +42,10 @@ public class World {
 
         for (Organism org : this.organisms) {
             org.setWorld(this);
+            if (org instanceof Human) {
+                this.isHumanAlive = true;
+            }
+
         }
 
         // Java equivalent of srand
@@ -133,6 +146,10 @@ public class World {
 
     public void removeOrganism(Organism organism) {
         organisms.remove(organism);
+        if(organism instanceof Human)
+        {
+            this.setIsHumanAlive(false);
+        }
     }
 
     public void handleHumanMovement() {
@@ -246,7 +263,7 @@ public class World {
                 Organism collidingOrganism = getOrganismAt(newPosition);
 
                 if (collidingOrganism != null && collidingOrganism != organism) {
-                    if (organism.compareTo(collidingOrganism) > 0) {
+                    if (organism.compareTo(collidingOrganism) >= 0) {
                         return false;
                     }
                 }else if (collidingOrganism == null)

@@ -1,5 +1,7 @@
 package General;
 
+import Animals.Human;
+
 public abstract class Organism {
     protected int strength;
     protected int initiative;
@@ -60,6 +62,10 @@ public abstract class Organism {
 
     public void kill() {
         this.alive = false;
+        if(this instanceof Human)
+        {
+            world.setIsHumanAlive(false);
+        }
     }
 
     public World getWorld() {

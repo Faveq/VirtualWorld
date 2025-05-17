@@ -12,6 +12,7 @@ public class Human extends Animal {
 
     public Human(Point position, int age, World world) {
         super(Constants.HUMAN_STRENGTH, Constants.HUMAN_INITIATIVE, position, age, world);
+        this.world.setIsHumanAlive(true);
     }
 
     @Override

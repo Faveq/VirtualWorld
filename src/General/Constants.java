@@ -8,7 +8,7 @@ public class Constants {
     public static final int SPREAD_PROBABILITY = 5; // %
 
     // Human
-    public static final int HUMAN_STRENGTH = 5;
+    public static final int HUMAN_STRENGTH = 1;
     public static final int HUMAN_INITIATIVE = 4;
     public static final String HUMAN_GRAPHIC_REPRESENTATION =  "H";
     public static final int HUMAN_SPECIAL_MOVE_COOLDOWN = 5;
@@ -22,7 +22,7 @@ public class Constants {
     public static final int SHEEP_INITIATIVE = 4;
     public static final String SHEEP_GRAPHIC_REPRESENTATION = "S";
 
-    public static final int FOX_STRENGTH = 3;
+    public static final int FOX_STRENGTH = 0;
     public static final int FOX_INITIATIVE = 7;
     public static final String FOX_GRAPHIC_REPRESENTATION = "F";
 
