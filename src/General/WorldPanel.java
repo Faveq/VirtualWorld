@@ -38,7 +38,7 @@ public class WorldPanel extends JPanel {
 
             @Override
             public Dimension getPreferredSize() {
-                return new Dimension(world.getWidth() * cellSize, world.getHeight() * cellSize);
+                return new Dimension(world.getWidth() * cellSize, world.getHeight() * cellSize + 70);
             }
         };
 
