@@ -142,6 +142,9 @@ public class World {
 
     public void addOrganism(Organism organism) {
         organisms.add(organism);
+        if (organism instanceof Human) {
+            this.setIsHumanAlive(true);
+        }
     }
 
     public void removeOrganism(Organism organism) {
@@ -338,6 +341,8 @@ public class World {
         if (turnNumber - specialMoveRound >= Constants.HUMAN_SPECIAL_MOVE_COOLDOWN) {
             setIsSpecialActive(false);
             setIsSpecialReady(true);
+        }else{
+            setIsSpecialReady(false);
         }
     }
 
@@ -504,6 +509,7 @@ public class World {
                             Human human = (Human) organism;
                             human.setIsInvincible(isInvincible);
                             setSpecialMoveRound(specialMoveRound);
+                            updateSpecialState();
                         }
                     }
 
@@ -513,6 +519,7 @@ public class World {
                 }
 
                 lineScanner.close();
+
             }
 
             // Read logs

@@ -17,7 +17,8 @@ public class WorldPanel extends JPanel {
     private JButton nextTurnButton;
     private JButton saveButton;
     private JButton loadButton;
-    private JButton specialButton; // Dodany przycisk specjalnej umiejętności
+    private JButton specialButton;
+    private JLabel specialCooldownLabel = new JLabel();
 
     public WorldPanel(World world) {
         this.world = world;
@@ -30,7 +31,7 @@ public class WorldPanel extends JPanel {
                 drawGrid(g);
                 drawOrganisms(g);
                 if (selectedCell != null) {
-                    g.setColor(new Color(173, 216, 230, 128)); // Jasnoniebieski z przezroczystością
+                    g.setColor(new Color(173, 216, 230, 128));
                     g.fillRect(selectedCell.x * cellSize, selectedCell.y * cellSize, cellSize, cellSize);
                 }
             }
@@ -108,12 +109,36 @@ public class WorldPanel extends JPanel {
         buttonPanel.remove(nextTurnButton);
         buttonPanel.remove(dpadPanel);
         buttonPanel.remove(specialButton);
+        buttonPanel.remove(specialCooldownLabel);
 
         if (!world.isHumanAlive()) {
             buttonPanel.add(nextTurnButton, 1); // po turnLabel
         } else {
             buttonPanel.add(dpadPanel, 1); // po turnLabel
             buttonPanel.add(specialButton, 2); // po dpadPanel
+            buttonPanel.add(specialCooldownLabel, 3); // licznik cooldownu
+
+            // Aktualizacja stanu przycisku i licznika
+            if (world.getIsSpecialActive()) {
+                specialButton.setEnabled(false);
+                specialButton.setText("Specjalna aktywna!");
+                specialButton.setBackground(Color.ORANGE);
+                int left = Constants.HUMAN_SPECIAL_MOVE_COOLDOWN - (world.getRoundNumber() - world.getSpecialMoveRound());
+                if (left < 0) left = 0;
+                specialCooldownLabel.setText("Pozostało: " + left + " tur");
+            } else if (!world.getIsSpecialReady()) {
+                specialButton.setEnabled(false);
+                specialButton.setText("Specjalna (cooldown)");
+                specialButton.setBackground(Color.LIGHT_GRAY);
+                int left = Constants.HUMAN_SPECIAL_MOVE_COOLDOWN - (world.getRoundNumber() - world.getSpecialMoveRound());
+                if (left < 0) left = 0;
+                specialCooldownLabel.setText("Pozostało: " + left + " tur");
+            } else {
+                specialButton.setEnabled(true);
+                specialButton.setText("Specjalna umiejętność");
+                specialButton.setBackground(null);
+                specialCooldownLabel.setText("");
+            }
         }
         if (saveButton.getParent() != buttonPanel) buttonPanel.add(saveButton);
         if (loadButton.getParent() != buttonPanel) buttonPanel.add(loadButton);
