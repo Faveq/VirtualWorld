@@ -26,7 +26,7 @@ public class Main {
     private static void initializeGame() {
         int width = 15;
         int height = 15;
-        BoardType boardType = BoardType.SQUARE;
+        BoardType boardType = BoardType.HEX;
 
         ArrayList<Organism> organisms = new ArrayList<>();
         organisms.add(new Sheep(new Point(7, 7))); // Add human in center of map
@@ -86,7 +86,11 @@ public class Main {
     }
 
     private static void handleKeyPress(KeyEvent e) {
-        if (!world.getIsHumanAlive()) {
+        if (world.getIsHumanAlive() && world.getBoardType() == BoardType.HEX) {
+            return;
+        }
+
+        if (!world.getIsHumanAlive() || world.getBoardType() == BoardType.HEX) {
             world.handleNextTurn();
             panel.updateAfterTurn();
             return;

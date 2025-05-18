@@ -435,11 +435,11 @@ public class World {
             int width = inFile.nextInt();
             int height = inFile.nextInt();
 
-//            if (boardType.equals("HEX")) {
-//                setBoardType(General.BoardType.HEX);
-//            }else{
-//                setBoardType(General.BoardType.SQUARE);
-//            }
+            if (boardType.equals("HEX")) {
+                setBoardType(General.BoardType.HEX);
+            }else{
+                setBoardType(General.BoardType.SQUARE);
+            }
             setTurn(turnNum);
             setWidth(width);
             setHeight(height);
