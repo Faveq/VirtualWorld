@@ -15,6 +15,10 @@ public class World {
     private boolean isHumanAlive = false;
     private ArrayList<String> logs;
     private ArrayList<Organism> organisms;
+    private BoardType BoardType = General.BoardType.HEX;
+    public final int[][] hexEvenRowDirections = {{-1,0},{1,0},{0,-1},{1,-1},{0,1},{1,1}};
+    public final int[][] hexOddRowDirections  = {{-1,0},{1,0},{-1,-1},{0,-1},{-1,1},{0,1}};
+    public final int[][] squareDirections = {{-1,-1},{0,-1},{1,-1},{-1,0},{1,0},{-1,1},{0,1},{1,1}};
 
     public World(int width, int height) {
         this.width = width;
@@ -52,7 +56,26 @@ public class World {
         Random random = new Random(System.currentTimeMillis());
     }
 
-    // No need for destructor in Java as it has garbage collection
+
+    public void setBoardType(BoardType boardType){
+        this.BoardType = boardType;
+    }
+
+    public BoardType getBoardType(){
+        return this.BoardType;
+    }
+
+    public int[][] getDirections(int row) {
+        if (this.getBoardType() == General.BoardType.SQUARE) {
+            return squareDirections;
+        } else {
+            if (row % 2 == 0) {
+                return hexEvenRowDirections;
+            } else {
+                return hexOddRowDirections;
+            }
+        }
+    }
 
     public int getWidth() {
         return width;
@@ -228,30 +251,34 @@ public class World {
     }
 
     public Point getFreeTile(Point position) {
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                Point newPosition = new Point(position.x + x, position.y + y);
 
-                if (!newPosition.beyondBorders(width, height) && getOrganismAt(newPosition) == null && !newPosition.equals(position)) {
-                    return newPosition;
-                }
+        int[][] directions = getDirections(position.y);
+
+
+        for (int[] direction : directions) {
+            Point newPosition = new Point(position.x + direction[0], position.y + direction[1]);
+
+            if (!newPosition.beyondBorders(width, height) && getOrganismAt(newPosition) == null && !newPosition.equals(position)) {
+                return newPosition;
             }
         }
+
         return position;
     }
 
+
+
     public ArrayList<Point> getAllFreeTiles(Point position) {
         ArrayList<Point> freeTiles = new ArrayList<>();
+        int[][] directions = getDirections(position.y);
 
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                Point newPosition = new Point(position.x + x, position.y + y);
+        for (int[] direction : directions) {
+            Point newPosition = new Point(position.x + direction[0], position.y + direction[1]);
 
-                if (!newPosition.beyondBorders(width, height) &&
-                        getOrganismAt(newPosition) == null &&
-                        !newPosition.equals(position)) {
-                    freeTiles.add(newPosition);
-                }
+            if (!newPosition.beyondBorders(width, height) &&
+                    getOrganismAt(newPosition) == null &&
+                    !newPosition.equals(position)) {
+                freeTiles.add(newPosition);
             }
         }
 
@@ -259,22 +286,24 @@ public class World {
     }
 
     public boolean isEveryoneStronger(Organism organism) {
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                Point newPosition = new Point(organism.getPosition().x + x, organism.getPosition().y + y);
 
-                Organism collidingOrganism = getOrganismAt(newPosition);
+        int[][] directions = getDirections(organism.getPosition().y);
 
-                if (collidingOrganism != null && collidingOrganism != organism) {
-                    if (organism.compareTo(collidingOrganism) >= 0) {
-                        return false;
-                    }
-                }else if (collidingOrganism == null)
-                {
+        for (int[] direction : directions) {
+            Point newPosition = new Point(organism.getPosition().x + direction[0], organism.getPosition().y + direction[1]);
+
+            Organism collidingOrganism = getOrganismAt(newPosition);
+
+            if (collidingOrganism != null && collidingOrganism != organism) {
+                if (organism.compareTo(collidingOrganism) >= 0) {
                     return false;
                 }
+            }else if (collidingOrganism == null)
+            {
+                return false;
             }
         }
+
         return true;
     }
 
@@ -325,29 +354,21 @@ public class World {
 
         removeBodies();
 
-//        drawWorld();
         printLogs();
-//        handleHumanMovement();
 
-        // Sleep equivalent in Java
-//        try {
-//            Thread.sleep(50);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+
     }
 
     public void updateSpecialState() {
         if (turnNumber - specialMoveRound >= Constants.HUMAN_SPECIAL_MOVE_COOLDOWN) {
             setIsSpecialActive(false);
             setIsSpecialReady(true);
-        }else{
+        }else if (specialMoveRound != 0 && turnNumber - specialMoveRound < Constants.HUMAN_SPECIAL_MOVE_COOLDOWN) {
             setIsSpecialReady(false);
         }
     }
 
     public void moveOrganisms() {
-        // Sort organisms by initiative and age
         Collections.sort(organisms, new Comparator<Organism>() {
             @Override
             public int compare(Organism org1, Organism org2) {
@@ -389,7 +410,6 @@ public class World {
     }
 
     public void drawWorld() {
-        // Clear screen in Java (not perfect but close)
         for (int i = 0; i < 50; i++) {
             System.out.println();
         }
@@ -474,7 +494,7 @@ public class World {
             setWidth(width);
             setHeight(height);
 
-            inFile.nextLine(); // Consume the newline
+            inFile.nextLine();
 
             String line;
             while (inFile.hasNextLine()) {

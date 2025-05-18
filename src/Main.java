@@ -43,7 +43,6 @@ public class Main {
 //       organisms.add(new Antylope(new Point(10, 1)));
 //       organisms.add(new Antylope(new Point(11, 1)));
 
-        // Zakomentowany fragment kodu dodający losowe organizmy
 
 //        for (int i = 0; i < 3; ++i) {
 //            organisms.add(new Fox(new Point(random.nextInt(width), random.nextInt(height))));
@@ -52,7 +51,7 @@ public class Main {
 //            organisms.add(new Grass(new Point(random.nextInt(width), random.nextInt(height))));
 //            organisms.add(new Guarana(new Point(random.nextInt(width), random.nextInt(height))));
 //            organisms.add(new MilkWeed(new Point(random.nextInt(width), random.nextInt(height))));
-////            organisms.add(new NightshadeBerries(new Point(random.nextInt(width), random.nextInt(height))));
+//            organisms.add(new NightshadeBerries(new Point(random.nextInt(width), random.nextInt(height))));
 //        }
 
 

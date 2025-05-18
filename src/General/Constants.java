@@ -54,7 +54,7 @@ public class Constants {
     public static final String GUARANA_GRAPHIC_REPRESENTATION = "+" ;
     public static final int GUARANA_STRENGTH_BUFF = 3;
 
-    public static final int NIGHTSHADE_BERRIES_STRENGTH = 99;
+    public static final int NIGHTSHADE_BERRIES_STRENGTH = 9999;
     public static final String NIGHTSHADE_BERRIES_GRAPHIC_REPRESENTATION =  "X";
 
     public static final int HOGEWEED_OF_PINE_STRENGTH = 10;
