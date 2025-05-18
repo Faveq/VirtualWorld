@@ -115,6 +115,4 @@ public abstract class Organism {
     public int compareTo(Organism other) {
         return Integer.compare(this.strength, other.strength);
     }
-
-    //Add < > overrides as methods
 }

@@ -3,7 +3,6 @@ package General;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -19,8 +18,6 @@ public class WorldPanel extends JPanel {
     private JPanel dpadPanel;
 
     private JButton nextTurnButton;
-    private JButton saveButton;
-    private JButton loadButton;
     private JButton specialButton;
     private JLabel specialCooldownLabel;
 
@@ -31,8 +28,6 @@ public class WorldPanel extends JPanel {
         turnLabel = new JLabel("Turn: " + world.getRoundNumber());
         buttonPanel = new JPanel();
         nextTurnButton = new JButton("Next turn");
-        saveButton = new JButton("Save");
-        loadButton = new JButton("Load");
         dpadPanel = createDPadPanel();
         specialButton = new JButton("Special ability");
         specialCooldownLabel = new JLabel();
@@ -208,14 +203,12 @@ public class WorldPanel extends JPanel {
                 }
             }
 
-            // Sprawdź czy kliknięcie jest w granicach planszy
             if (closestX >= 0 && closestX < world.getWidth() && closestY >= 0 && closestY < world.getHeight()) {
                 selectedCell = new Point(closestX, closestY);
                 repaint();
                 showOrganismModal(closestX, closestY);
             }
         } else {
-            // Oryginalna obsługa dla planszy kwadratowej
             int x = e.getX() / CELL_SIZE;
             int y = e.getY() / CELL_SIZE;
 
@@ -233,17 +226,6 @@ public class WorldPanel extends JPanel {
             updateAfterTurn();
         });
 
-        saveButton.addActionListener(e -> {
-            world.saveGame();
-            JOptionPane.showMessageDialog(this, "Game has been saved!", "Game save", JOptionPane.INFORMATION_MESSAGE);
-        });
-
-        loadButton.addActionListener(e -> {
-            world.loadGame();
-            updateAfterTurn();
-            JOptionPane.showMessageDialog(this, "Game has been loaded!", "Game load", JOptionPane.INFORMATION_MESSAGE);
-        });
-
         specialButton.addActionListener(e -> {
             world.setHumanNextMove(HumanMove.SPECIAL);
             world.handleNextTurn();
@@ -251,10 +233,33 @@ public class WorldPanel extends JPanel {
         });
     }
 
-    private void updateAfterTurn() {
-        turnLabel.setText("Turn: " + world.getRoundNumber());
-        updateControlPanel();
-        repaint();
+
+  public void updateAfterTurn() {
+      turnLabel.setText("Turn: " + world.getRoundNumber());
+      updateControlPanel();
+      repaint();
+  }
+
+    private JPanel createDPadPanel() {
+        JPanel dpad = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(2, 2, 2, 2);
+
+        JButton upLeft = createDirectionButton("↖", HumanMove.UP_LEFT);
+        JButton upRight = createDirectionButton("↗", HumanMove.UP_RIGHT);
+        JButton left = createDirectionButton("←", HumanMove.LEFT);
+        JButton right = createDirectionButton("→", HumanMove.RIGHT);
+        JButton downLeft = createDirectionButton("↙", HumanMove.DOWN_LEFT);
+        JButton downRight = createDirectionButton("↘", HumanMove.DOWN_RIGHT);
+
+        c.gridx = 1; c.gridy = 0; dpad.add(upLeft, c);
+        c.gridx = 2; c.gridy = 0; dpad.add(upRight, c);
+        c.gridx = 1; c.gridy = 1; dpad.add(left, c);
+        c.gridx = 2; c.gridy = 1; dpad.add(right, c);
+        c.gridx = 1; c.gridy = 2; dpad.add(downLeft, c);
+        c.gridx = 2; c.gridy = 2; dpad.add(downRight, c);
+
+        return dpad;
     }
 
     private void updateControlPanel() {
@@ -263,10 +268,12 @@ public class WorldPanel extends JPanel {
         buttonPanel.remove(specialButton);
         buttonPanel.remove(specialCooldownLabel);
 
-        if (!world.isHumanAlive()) {
+        if (!world.getIsHumanAlive()) {
             buttonPanel.add(nextTurnButton, 1);
         } else {
-            buttonPanel.add(dpadPanel, 1);
+            if (world.getBoardType() == BoardType.HEX) {
+                buttonPanel.add(dpadPanel, 1);
+            }
             buttonPanel.add(specialButton, 2);
             buttonPanel.add(specialCooldownLabel, 3);
 
@@ -280,14 +287,6 @@ public class WorldPanel extends JPanel {
             } else {
                 configureSpecialButton(true, "Special ability", null, 0);
             }
-        }
-
-        if (saveButton.getParent() != buttonPanel) {
-            buttonPanel.add(saveButton);
-        }
-
-        if (loadButton.getParent() != buttonPanel) {
-            buttonPanel.add(loadButton);
         }
 
         buttonPanel.revalidate();
@@ -306,23 +305,6 @@ public class WorldPanel extends JPanel {
         }
     }
 
-    private JPanel createDPadPanel() {
-        JPanel dpad = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(2, 2, 2, 2);
-
-        JButton upButton = createDirectionButton("↑", HumanMove.UP);
-        JButton downButton = createDirectionButton("↓", HumanMove.DOWN);
-        JButton leftButton = createDirectionButton("←", HumanMove.LEFT);
-        JButton rightButton = createDirectionButton("→", HumanMove.RIGHT);
-
-        c.gridx = 1; c.gridy = 0; dpad.add(upButton, c);
-        c.gridx = 0; c.gridy = 1; dpad.add(leftButton, c);
-        c.gridx = 2; c.gridy = 1; dpad.add(rightButton, c);
-        c.gridx = 1; c.gridy = 2; dpad.add(downButton, c);
-
-        return dpad;
-    }
 
     private JButton createDirectionButton(String label, HumanMove move) {
         JButton button = new JButton(label);
@@ -436,7 +418,7 @@ public class WorldPanel extends JPanel {
 
         switch (name) {
             case "Human":
-                if (!world.isHumanAlive()) {
+                if (!world.getIsHumanAlive()) {
                     return new Animals.Human(position, 0, world);
                 } else {
                     JOptionPane.showMessageDialog(this, "There is already a human in the world",

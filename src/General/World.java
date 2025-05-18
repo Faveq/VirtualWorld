@@ -30,7 +30,7 @@ public class World {
         Random random = new Random(System.currentTimeMillis());
     }
 
-    boolean isHumanAlive() {
+    public boolean getIsHumanAlive() {
         return this.isHumanAlive;
     }
 
@@ -179,15 +179,10 @@ public class World {
     }
 
     public void handleHumanMovement() {
-        // Java doesn't have direct access to Windows API like C++
-        // We would need to use Java's KeyListener or similar input handling
-        // Below is a conceptual adaptation that would need to be implemented
-        // with proper Java input handling mechanisms
-
         Scanner scanner = new Scanner(System.in);
         HumanMove arrow = HumanMove.NONE;
 
-        System.out.println("Enter move (W=UP, S=DOWN, A=LEFT, D=RIGHT, SPACE=SPECIAL, S=SAVE, L=LOAD): ");
+        System.out.println("Enter move (W=UP, S=DOWN, A=LEFT, D=RIGHT ");
         String input = scanner.nextLine().toUpperCase();
 
         switch (input) {
@@ -202,15 +197,6 @@ public class World {
                 break;
             case "D":
                 arrow = HumanMove.RIGHT;
-                break;
-            case " ":
-                arrow = HumanMove.SPECIAL;
-                break;
-            case "SAVE":
-                saveGame();
-                break;
-            case "LOAD":
-                loadGame();
                 break;
             default:
                 break;

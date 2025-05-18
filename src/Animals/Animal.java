@@ -140,7 +140,7 @@ public class Animal extends Organism {
                 getWorld().addLog("Round: " + getWorld().getRoundNumber() + "-> organism " + enemy.toString() + " age "+ enemy.getAge() + " strength " + enemy.getStrength()  + " was killed by " + this.toString() + " age " + this.getAge()+ " strength "+ this.getStrength() );
                 enemy.addEffect(this);
                 enemy.kill();
-            } else { // równa siła, wygrywa atakujący (this)
+            } else {
                 if (enemy.didDeflectAttack(this)) {
                     moveBack();
                     return;

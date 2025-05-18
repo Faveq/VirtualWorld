@@ -1,7 +1,6 @@
 package Animals;
 import General.*;
 
-
 public class Human extends Animal {
 
     private boolean invincible = false;
@@ -18,18 +17,49 @@ public class Human extends Animal {
     @Override
     public void action() {
         checkSpecial();
+
+        Point moveDirection = null;
+
         switch (world.getHumanNextMove()) {
             case UP:
-                move(new Point(0, -1));
+                moveDirection = new Point(0, -1);
                 break;
             case DOWN:
-                move(new Point(0, 1));
+                moveDirection = new Point(0, 1);
+                break;
+            case UP_LEFT:
+                if (position.y % 2 == 0) {
+                    moveDirection = new Point(-1, -1);
+                } else {
+                    moveDirection = new Point(0, -1);
+                }
+                break;
+            case UP_RIGHT:
+                if (position.y % 2 == 0) {
+                    moveDirection = new Point(0, -1);
+                } else {
+                    moveDirection = new Point(1, -1);
+                }
+                break;
+            case DOWN_LEFT:
+                if (position.y % 2 == 0) {
+                    moveDirection = new Point(-1, 1);
+                } else {
+                    moveDirection = new Point(0, 1);
+                }
+                break;
+            case DOWN_RIGHT:
+                if (position.y % 2 == 0) {
+                    moveDirection = new Point(0, 1);
+                } else {
+                    moveDirection = new Point(1, 1);
+                }
                 break;
             case LEFT:
-                move(new Point(-1, 0));
+                moveDirection = new Point(-1, 0);
                 break;
             case RIGHT:
-                move(new Point(1, 0));
+                moveDirection = new Point(1, 0);
                 break;
             case SPECIAL:
                 useSpecial();
@@ -38,6 +68,10 @@ public class Human extends Animal {
                 break;
             default:
                 break;
+        }
+
+        if (moveDirection != null) {
+            move(moveDirection);
         }
     }
 

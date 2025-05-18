@@ -1,8 +1,5 @@
-HEX
-0 15 15
-HogweedOfPine 0 5 5
-HogweedOfPine 0 13 13
-HogweedOfPine 0 0 9
-HogweedOfPine 0 12 1
-CyberSheep 0 7 9
+SQUARE
+23 15 15
+Human 23 7 7 false 0
+NightshadeBerries 7 9 10
 Logs

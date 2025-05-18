@@ -4,8 +4,6 @@ public class Constants {
 
 
 
-    // Ogólne stałe
-    public static final int SPREAD_PROBABILITY = 5; // %
 
     // Human
     public static final int HUMAN_STRENGTH = 1;
@@ -43,6 +41,8 @@ public class Constants {
     public static final String CYBER_SHEEP_GRAPHIC_REPRESENTATION = "C";
 
     // Plants
+    public static final int SPREAD_PROBABILITY = 5; // %
+
     public static final String GRASS_GRAPHIC_REPRESENTATION = ".";
     public static final int GRASS_STRENGTH = 0;
 
