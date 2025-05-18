@@ -25,7 +25,7 @@ public class Turtle extends Animal {
     @Override
     public void action() {
         if (Math.random() * 100 < Constants.TURTLE_MOVE_CHANCE) {
-            randomMove();
+            randomMove(1);
         }
     }
 

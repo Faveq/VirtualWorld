@@ -22,7 +22,7 @@ public class Constants {
     public static final int SHEEP_INITIATIVE = 4;
     public static final String SHEEP_GRAPHIC_REPRESENTATION = "S";
 
-    public static final int FOX_STRENGTH = 0;
+    public static final int FOX_STRENGTH = 3;
     public static final int FOX_INITIATIVE = 7;
     public static final String FOX_GRAPHIC_REPRESENTATION = "F";
 

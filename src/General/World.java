@@ -15,9 +15,9 @@ public class World {
     private boolean isHumanAlive = false;
     private ArrayList<String> logs;
     private ArrayList<Organism> organisms;
-    private BoardType BoardType = General.BoardType.HEX;
-    public final int[][] hexEvenRowDirections = {{-1,0},{1,0},{0,-1},{1,-1},{0,1},{1,1}};
-    public final int[][] hexOddRowDirections  = {{-1,0},{1,0},{-1,-1},{0,-1},{-1,1},{0,1}};
+    private BoardType BoardType = General.BoardType.SQUARE;
+    public final int[][] hexEvenRowDirections = {{-1,0},{1,0},{0,-1},{-1,-1},{0,1},{-1,1}};
+    public final int[][] hexOddRowDirections  = {{-1,0},{1,0},{1,-1},{0,-1},{1,1},{0,1}};
     public final int[][] squareDirections = {{-1,-1},{0,-1},{1,-1},{-1,0},{1,0},{-1,1},{0,1},{1,1}};
 
     public World(int width, int height) {
@@ -52,7 +52,6 @@ public class World {
 
         }
 
-        // Java equivalent of srand
         Random random = new Random(System.currentTimeMillis());
     }
 
@@ -401,50 +400,6 @@ public class World {
         }
     }
 
-    public void drawBorder() {
-        System.out.print("+");
-        for (int i = 0; i < width; i++) {
-            System.out.print("-");
-        }
-        System.out.println("+");
-    }
-
-    public void drawWorld() {
-        for (int i = 0; i < 50; i++) {
-            System.out.println();
-        }
-
-        System.out.println("Bartosz Swierczynski 203825");
-        System.out.println("\nTurn #" + turnNumber + "\n");
-
-        if (isSpecialActive) {
-            System.out.println("\nSpecial ability is active!");
-        } else if (isSpecialReady) {
-            System.out.println("\nSpecial ability is ready to use!");
-        } else {
-            System.out.println("\nSpecial ability is not ready to use!");
-        }
-
-        drawBorder();
-
-        for (int y = 0; y < height; y++) {
-            System.out.print("|");
-            for (int x = 0; x < width; x++) {
-                Point position = new Point(x, y);
-                Organism organism = getOrganismAt(position);
-                if (organism != null) {
-                    System.out.print(organism.getGraphicRepresentation());
-                } else {
-                    System.out.print(".");
-                }
-            }
-            System.out.println("|");
-        }
-
-        drawBorder();
-        printLogs();
-    }
-
     public void clearGame() {
         clearLogs();
         organisms.clear();
@@ -452,6 +407,7 @@ public class World {
 
     public void saveGame() {
         try (PrintWriter outFile = new PrintWriter(new FileWriter("save.txt"))) {
+            outFile.println(this.getBoardType());
             outFile.println(turnNumber + " " + width + " " + height);
 
             for (Organism organism : getOrganisms()) {
@@ -486,10 +442,17 @@ public class World {
         try (Scanner inFile = new Scanner(new File("save.txt"))) {
             clearGame();
 
+            String boardType = inFile.nextLine();
+
             int turnNum = inFile.nextInt();
             int width = inFile.nextInt();
             int height = inFile.nextInt();
 
+//            if (boardType.equals("HEX")) {
+//                setBoardType(General.BoardType.HEX);
+//            }else{
+//                setBoardType(General.BoardType.SQUARE);
+//            }
             setTurn(turnNum);
             setWidth(width);
             setHeight(height);
@@ -542,7 +505,6 @@ public class World {
 
             }
 
-            // Read logs
             while (inFile.hasNextLine()) {
                 line = inFile.nextLine();
                 if (!line.isEmpty()) {
@@ -556,6 +518,6 @@ public class World {
             e.printStackTrace();
         }
 
-        drawWorld();
+        printLogs();
     }
 }

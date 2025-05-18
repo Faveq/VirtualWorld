@@ -12,8 +12,8 @@ public class Main {
 
 
 
-        int width = 25;
-        int height = 15;
+        int width = 5;
+        int height = 5;
 
         Random random = new Random(System.currentTimeMillis());
 

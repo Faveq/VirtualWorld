@@ -36,7 +36,7 @@ public class CyberSheep extends Animal {
 
             move(shift);
         } else {
-            randomMove();
+            randomMove(1);
         }
     }
 

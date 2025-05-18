@@ -40,7 +40,7 @@ public class Animal extends Organism {
 
     @Override
     public void action() {
-        randomMove();
+        randomMove(1);
     }
 
     @Override
@@ -68,29 +68,31 @@ public class Animal extends Organism {
     protected void randomMove(int range) {
         Point shift = new Point(0, 0);
         Organism collidingOrganism;
+        int[][] directions = world.getDirections(this.getPosition().y);
 
-//        if (!getGraphicRepresentation().equals(Constants.WOLF_GRAPHIC_REPRESENTATION)) {
-        do {
-            Random random = new Random();
-            int randomX = (random.nextInt(2 * range + 1)) - range;
-            int randomY = (random.nextInt(2 * range + 1)) - range;
-            shift = new Point(randomX, randomY);
-            collidingOrganism = getWorld().getOrganismAt(getPosition().add(shift));
+        if (getWorld().isEveryoneStronger(this) && hasGoodSmell()) {
+            return;
+        }
 
-            if (getWorld().isEveryoneStronger(this) && hasGoodSmell()) {
-                shift = new Point(0, 0);
-                break;
-            }
+        if (!getGraphicRepresentation().equals(Constants.WOLF_GRAPHIC_REPRESENTATION)) {
+            do {
+                Random random = new Random();
 
-        } while ((shift.x == 0 && shift.y == 0) ||
-                (hasGoodSmell() && collidingOrganism != null && collidingOrganism.compareTo(this) > 0));
 
-        move(shift);
-//        }
-    }
+//                int randomX = (random.nextInt(2 * range + 1)) - range;
+//                int randomY = (random.nextInt(2 * range + 1)) - range;
 
-    protected void randomMove() {
-        randomMove(1);
+                int[] randDirection = directions[random.nextInt(directions.length)];
+
+//                shift = new Point(randomX, randomY);
+                shift = new Point(randDirection[0], randDirection[1]);
+                collidingOrganism = getWorld().getOrganismAt(getPosition().add(shift));
+
+            } while ((shift.x == 0 && shift.y == 0) ||
+                    (hasGoodSmell() && collidingOrganism != null && collidingOrganism.compareTo(this) > 0));
+
+            move(shift);
+        }
     }
 
     protected void move(Point shift) {

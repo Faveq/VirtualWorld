@@ -3,6 +3,8 @@ package General;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Area;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class WorldPanel extends JPanel {
@@ -63,7 +65,7 @@ public class WorldPanel extends JPanel {
                     for (int y = 0; y < world.getHeight(); y++) {
                         for (int x = 0; x < world.getWidth(); x++) {
                             int px = x * hexWidth + (y % 2) * (hexWidth / 2) + PADDING;
-                            int py = y * vertDist+ PADDING;
+                            int py = y * vertDist + PADDING;
                             Polygon hex = createHex(px, py, hexHeight / 2);
                             g.setColor(Color.LIGHT_GRAY);
                             g.drawPolygon(hex);
@@ -71,8 +73,8 @@ public class WorldPanel extends JPanel {
                     }
                     drawOrganismsHex(g, hexWidth, vertDist, hexHeight / 2);
                     if (selectedCell != null) {
-                        int px = selectedCell.x * hexWidth + (selectedCell.y % 2) * (hexWidth / 2);
-                        int py = selectedCell.y * vertDist;
+                        int px = selectedCell.x * hexWidth + (selectedCell.y % 2) * (hexWidth / 2) + PADDING;
+                        int py = selectedCell.y * vertDist + PADDING;
                         Polygon hex = createHex(px, py, hexHeight / 2);
                         g.setColor(new Color(173, 216, 230, 128));
                         g.fillPolygon(hex);
@@ -108,8 +110,47 @@ public class WorldPanel extends JPanel {
                 List<Organism> organisms = world.getOrganisms();
                 for (Organism organism : organisms) {
                     int x = organism.getPosition().x * hexWidth + (organism.getPosition().y % 2) * (hexWidth / 2) + PADDING;
-                    int y = organism.getPosition().y * vertDist+ PADDING;
-                    drawOrganismImage(g, organism, x - r / 2, y - r / 2);
+                    int y = organism.getPosition().y * vertDist + PADDING;
+
+                    // Create a hexagonal shape for clipping
+                    Polygon hex = createHex(x, y, r - 2); // Slightly smaller to fit within the cell
+
+                    // Draw the organism with hexagonal clipping
+                    drawHexClippedOrganismImage(g, organism, x, y, hex, r);
+                }
+            }
+
+            private void drawHexClippedOrganismImage(Graphics g, Organism organism, int x, int y, Polygon hex, int r) {
+                Graphics2D g2d = (Graphics2D) g.create();
+
+                try {
+                    // Load the organism image
+                    Image originalImage = loadOrganismImage(organism);
+                    if (originalImage == null) return;
+
+                    // Create a buffered image from the original
+                    BufferedImage bufferedImage = new BufferedImage(
+                            originalImage.getWidth(null),
+                            originalImage.getHeight(null),
+                            BufferedImage.TYPE_INT_ARGB);
+
+                    Graphics2D bImageGraphics = bufferedImage.createGraphics();
+                    bImageGraphics.drawImage(originalImage, 0, 0, null);
+                    bImageGraphics.dispose();
+
+                    // Set the clip to the hexagon shape
+                    g2d.setClip(hex);
+
+                    // Draw the image centered in the hex
+                    int imageSize = r * 2 - 8; // Make it slightly smaller than the hex
+                    g2d.drawImage(bufferedImage,
+                            x - imageSize/2,
+                            y - imageSize/2,
+                            imageSize,
+                            imageSize,
+                            null);
+                } finally {
+                    g2d.dispose();
                 }
             }
 
@@ -143,8 +184,8 @@ public class WorldPanel extends JPanel {
             int vertDist = hexHeight * 3 / 4;
 
             // Przekształcenie współrzędnych kliknięcia na współrzędne siatki hex
-            int mouseX = e.getX();
-            int mouseY = e.getY();
+            int mouseX = e.getX() - PADDING; // Adjust for padding
+            int mouseY = e.getY() - PADDING; // Adjust for padding
 
             // Znajdź najbliższy heksagon
             int closestX = -1;

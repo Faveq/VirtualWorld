@@ -1,63 +1,10 @@
-26 25 15
-Guarana 26 10 5
-Guarana 26 16 8
-Guarana 26 6 6
-Guarana 26 14 5
-Guarana 15 10 6
-Guarana 15 15 5
-Guarana 13 16 9
-Guarana 13 13 6
-Guarana 12 6 5
-Guarana 12 14 6
-Guarana 11 9 6
-Guarana 10 5 4
-Guarana 9 9 5
-Guarana 8 11 5
-Guarana 7 9 4
-Guarana 7 14 4
-Guarana 7 15 6
-Guarana 7 5 5
-Guarana 7 10 4
-Guarana 6 16 7
-Guarana 6 15 4
-Guarana 6 4 6
-Guarana 6 10 3
-Guarana 5 15 8
-Guarana 5 6 4
-Guarana 5 8 5
-Guarana 5 13 4
-Guarana 5 15 3
-Guarana 5 4 4
-Guarana 5 5 6
-Guarana 5 11 4
-Guarana 5 16 5
-Guarana 4 7 7
-Guarana 4 9 7
-Guarana 4 16 6
-Guarana 4 17 7
-Guarana 4 16 4
-Guarana 4 8 4
-Guarana 3 14 7
-Guarana 3 11 3
-Guarana 3 6 7
-Guarana 3 17 6
-Guarana 2 10 7
-Guarana 2 8 6
-Guarana 2 10 2
-Guarana 2 12 4
-Guarana 2 7 8
-Guarana 1 13 5
-Guarana 1 11 6
-Guarana 1 7 4
-Guarana 1 5 7
-Guarana 1 6 8
-Guarana 1 9 8
-Guarana 1 7 6
+HEX
+0 5 5
+Fox 0 2 3
+Wolf 0 2 2
+Wolf 0 1 3
+Wolf 0 2 4
+Wolf 0 3 4
+Wolf 0 3 3
+Wolf 0 3 2
 Logs
-Round: 26-> new Guarana was born at 13, 5
-Round: 26-> new Guarana was born at 11, 6
-Round: 26-> new Guarana was born at 7, 4
-Round: 26-> new Guarana was born at 5, 7
-Round: 26-> new Guarana was born at 6, 8
-Round: 26-> new Guarana was born at 9, 8
-Round: 26-> new Guarana was born at 7, 6
