@@ -38,11 +38,12 @@ public class World {
         this.isHumanAlive = isHumanAlive;
     }
 
-    public World(int width, int height, ArrayList<Organism> organisms) {
+    public World(int width, int height, ArrayList<Organism> organisms, BoardType boardType) {
         this.width = width;
         this.height = height;
         this.logs = new ArrayList<>();
         this.organisms = new ArrayList<>(organisms);
+        this.BoardType = boardType;
 
         for (Organism org : this.organisms) {
             org.setWorld(this);

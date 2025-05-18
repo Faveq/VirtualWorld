@@ -12,8 +12,9 @@ public class Main {
 
 
 
-        int width = 5;
-        int height = 5;
+        int width = 15;
+        int height = 15;
+        BoardType boardType = BoardType.HEX;
 
         Random random = new Random(System.currentTimeMillis());
 
@@ -55,9 +56,7 @@ public class Main {
 //        }
 
 
-        // Tworzenie świata i uruchomienie symulacji
-        World world = new World(width, height, organisms);
-//        world.drawWorld();
+        World world = new World(width, height, organisms, boardType);
 
         JFrame frame = new JFrame("Symulacja świata");
         WorldPanel panel = new WorldPanel(world);

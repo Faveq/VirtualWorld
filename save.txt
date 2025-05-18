@@ -1,10 +1,8 @@
 HEX
-0 5 5
-Fox 0 2 3
-Wolf 0 2 2
-Wolf 0 1 3
-Wolf 0 2 4
-Wolf 0 3 4
-Wolf 0 3 3
-Wolf 0 3 2
+0 15 15
+HogweedOfPine 0 5 5
+HogweedOfPine 0 13 13
+HogweedOfPine 0 0 9
+HogweedOfPine 0 12 1
+CyberSheep 0 7 9
 Logs
