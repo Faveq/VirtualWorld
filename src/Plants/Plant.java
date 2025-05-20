@@ -29,12 +29,10 @@ public class Plant extends Organism {
 
     @Override
     public void collision() {
-        // Empty implementation as in C++ version
     }
 
     @Override
     public void resetReproduction() {
-        // Empty implementation as in C++ version
     }
 
     @Override
@@ -55,7 +53,7 @@ public class Plant extends Organism {
             Organism newPlant = this.copy();
             newPlant.setPosition(newPosition);
 
-            getWorld().addLog("Round: " + getWorld().getRoundNumber() + "->" + " new " + newPlant.toString() +
+            getWorld().addLog("Round: " + getWorld().getRoundNumber() + "->" + " new " + newPlant +
                     " was born at " + newPosition.x + ", " + newPosition.y);
             newPlant.setAge(0);
             getWorld().addOrganism(newPlant);

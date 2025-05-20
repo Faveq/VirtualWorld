@@ -27,7 +27,6 @@ public class World {
         this.organisms = new ArrayList<>();
 
         // Java equivalent of srand
-        Random random = new Random(System.currentTimeMillis());
     }
 
     public boolean getIsHumanAlive() {
@@ -53,7 +52,6 @@ public class World {
 
         }
 
-        Random random = new Random(System.currentTimeMillis());
     }
 
 
@@ -115,10 +113,6 @@ public class World {
         return null;
     }
 
-    public ArrayList<String> getLogs() {
-        return new ArrayList<>(logs);
-    }
-
     public ArrayList<Organism> getOrganisms() {
         return new ArrayList<>(organisms);
     }
@@ -129,10 +123,6 @@ public class World {
 
     public boolean getIsSpecialReady() {
         return isSpecialReady;
-    }
-
-    public void setRoundNumber(int roundNumber) {
-        this.turnNumber = roundNumber;
     }
 
     public void setHumanNextMove(HumanMove move) {
@@ -178,33 +168,6 @@ public class World {
         }
     }
 
-    public void handleHumanMovement() {
-        Scanner scanner = new Scanner(System.in);
-        HumanMove arrow = HumanMove.NONE;
-
-        System.out.println("Enter move (W=UP, S=DOWN, A=LEFT, D=RIGHT ");
-        String input = scanner.nextLine().toUpperCase();
-
-        switch (input) {
-            case "W":
-                arrow = HumanMove.UP;
-                break;
-            case "S":
-                arrow = HumanMove.DOWN;
-                break;
-            case "A":
-                arrow = HumanMove.LEFT;
-                break;
-            case "D":
-                arrow = HumanMove.RIGHT;
-                break;
-            default:
-                break;
-        }
-
-        setHumanNextMove(arrow);
-    }
-
     public Organism allocateOrganismByName(String name) {
         Point defaultPosition = new Point(0, 0);
 
@@ -231,6 +194,8 @@ public class World {
                 return new NightshadeBerries(defaultPosition);
             case "HogweedOfPine":
                 return new HogweedOfPine(defaultPosition);
+            case "CyberSheep":
+                return new CyberSheep(defaultPosition);
             default:
                 return null;
         }
@@ -355,7 +320,7 @@ public class World {
     }
 
     public void moveOrganisms() {
-        Collections.sort(organisms, new Comparator<Organism>() {
+        organisms.sort(new Comparator<Organism>() {
             @Override
             public int compare(Organism org1, Organism org2) {
                 if (org1.getInitiative() == org2.getInitiative()) {
@@ -405,8 +370,7 @@ public class World {
                         + organism.getPosition().y);
 
                 if (organism.toString().equals("Human")) {
-                    if (organism instanceof Human) {
-                        Human human = (Human) organism;
+                    if (organism instanceof Human human) {
                         outFile.print(" " + human.isInvincible() + " "
                                 + specialMoveRound);
                     }
@@ -475,8 +439,7 @@ public class World {
                         boolean isInvincible = lineScanner.nextBoolean();
                         int specialMoveRound = lineScanner.nextInt();
 
-                        if (organism instanceof Human) {
-                            Human human = (Human) organism;
+                        if (organism instanceof Human human) {
                             human.setIsInvincible(isInvincible);
                             setSpecialMoveRound(specialMoveRound);
                             updateSpecialState();

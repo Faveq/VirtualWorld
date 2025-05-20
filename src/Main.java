@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.Random;
+
 import Animals.*;
 import General.*;
 import javax.swing.JFrame;
@@ -15,8 +15,7 @@ import java.awt.event.ActionListener;
 public class Main {
     private static World world;
     private static JFrame frame;
-    private static WorldPanel panel;
-    private static KeyAdapter keyAdapter;
+    private static GUI panel;
 
     public static void main(String[] args) {
         initializeGame();
@@ -29,27 +28,23 @@ public class Main {
         BoardType boardType = BoardType.HEX;
 
         ArrayList<Organism> organisms = new ArrayList<>();
-        organisms.add(new Sheep(new Point(7, 7))); // Add human in center of map
+        organisms.add(new Sheep(new Point(7, 7)));
 
         world = new World(width, height, organisms, boardType);
     }
 
     private static void createAndShowGUI() {
-        frame = new JFrame("Symulacja świata");
-        panel = new WorldPanel(world);
+        frame = new JFrame("Virtual world");
+        panel = new GUI(world);
         frame.add(panel);
 
-        // Create menu bar with save and load options
         JMenuBar menuBar = new JMenuBar();
         JMenu gameMenu = new JMenu("Game");
 
         JMenuItem saveItem = new JMenuItem("Save Game");
-        saveItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                world.saveGame();
-                JOptionPane.showMessageDialog(frame, "Game saved successfully!");
-            }
+        saveItem.addActionListener(e -> {
+            world.saveGame();
+            JOptionPane.showMessageDialog(frame, "Game saved successfully!");
         });
 
         JMenuItem loadItem = new JMenuItem("Load Game");
@@ -58,7 +53,7 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 world.loadGame();
                 panel.updateAfterTurn();
-                frame.requestFocus(); // Request focus after loading
+                frame.requestFocus();
                 JOptionPane.showMessageDialog(frame, "Game loaded successfully!");
             }
         });
@@ -72,7 +67,7 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
-        keyAdapter = new KeyAdapter() {
+        KeyAdapter keyAdapter = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 handleKeyPress(e);

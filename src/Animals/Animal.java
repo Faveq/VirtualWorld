@@ -80,7 +80,7 @@ public class Animal extends Organism {
 
                 int[] randDirection = directions[random.nextInt(directions.length)];
 
-                shift = new Point(randDirection[0], randDirection[1]);
+                shift = new Point(randDirection[0] * random.nextInt(range + 1), randDirection[1]*random.nextInt(range + 1));
                 collidingOrganism = getWorld().getOrganismAt(getPosition().add(shift));
 
             } while ((shift.x == 0 && shift.y == 0) ||

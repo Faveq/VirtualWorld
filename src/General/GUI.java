@@ -6,7 +6,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public class WorldPanel extends JPanel {
+public class GUI extends JPanel {
     private static final int CELL_SIZE = 45;
     private static final int PADDING = 45;
 
@@ -21,7 +21,8 @@ public class WorldPanel extends JPanel {
     private JButton specialButton;
     private JLabel specialCooldownLabel;
 
-    public WorldPanel(World world) {
+    // Constructor for GUI panel
+    public GUI(World world) {
         this.world = world;
         setLayout(new BorderLayout());
 
@@ -45,9 +46,11 @@ public class WorldPanel extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    // Creates the grid panel for board rendering
     private JPanel createGridPanel() {
         JPanel gridPanel = new JPanel() {
 
+            // Paints the board and organisms
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -90,6 +93,7 @@ public class WorldPanel extends JPanel {
                 }
             }
 
+            // Creates a hexagon polygon at given position and radius
             private Polygon createHex(int x, int y, int r) {
                 Polygon hex = new Polygon();
                 for (int i = 0; i < 6; i++) {
@@ -101,29 +105,27 @@ public class WorldPanel extends JPanel {
                 return hex;
             }
 
+            // Draws organisms on a hexagonal board
             private void drawOrganismsHex(Graphics g, int hexWidth, int vertDist, int r) {
                 List<Organism> organisms = world.getOrganisms();
                 for (Organism organism : organisms) {
                     int x = organism.getPosition().x * hexWidth + (organism.getPosition().y % 2) * (hexWidth / 2) + PADDING;
                     int y = organism.getPosition().y * vertDist + PADDING;
 
-                    // Create a hexagonal shape for clipping
-                    Polygon hex = createHex(x, y, r - 2); // Slightly smaller to fit within the cell
+                    Polygon hex = createHex(x, y, r - 2);
 
-                    // Draw the organism with hexagonal clipping
-                    drawHexClippedOrganismImage(g, organism, x, y, hex, r);
+                    drawHexImage(g, organism, x, y, hex, r);
                 }
             }
 
-            private void drawHexClippedOrganismImage(Graphics g, Organism organism, int x, int y, Polygon hex, int r) {
+            // Draws an organism image clipped to a hexagon
+            private void drawHexImage(Graphics g, Organism organism, int x, int y, Polygon hex, int r) {
                 Graphics2D g2d = (Graphics2D) g.create();
 
                 try {
-                    // Load the organism image
                     Image originalImage = loadOrganismImage(organism);
                     if (originalImage == null) return;
 
-                    // Create a buffered image from the original
                     BufferedImage bufferedImage = new BufferedImage(
                             originalImage.getWidth(null),
                             originalImage.getHeight(null),
@@ -133,11 +135,9 @@ public class WorldPanel extends JPanel {
                     bImageGraphics.drawImage(originalImage, 0, 0, null);
                     bImageGraphics.dispose();
 
-                    // Set the clip to the hexagon shape
                     g2d.setClip(hex);
 
-                    // Draw the image centered in the hex
-                    int imageSize = r * 2 - 8; // Make it slightly smaller than the hex
+                    int imageSize = r * 2 - 8;
                     g2d.drawImage(bufferedImage,
                             x - imageSize/2,
                             y - imageSize/2,
@@ -149,6 +149,7 @@ public class WorldPanel extends JPanel {
                 }
             }
 
+            // Returns preferred size of the grid panel
             @Override
             public Dimension getPreferredSize() {
                 if (world.getBoardType() == BoardType.HEX) {
@@ -162,6 +163,7 @@ public class WorldPanel extends JPanel {
             }
         };
 
+        // Handles mouse click on the grid
         gridPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -172,17 +174,16 @@ public class WorldPanel extends JPanel {
         return gridPanel;
     }
 
+    // Handles click event on the board grid
     private void handleGridClick(MouseEvent e) {
         if (world.getBoardType() == BoardType.HEX) {
             int hexHeight = CELL_SIZE;
             int hexWidth = (int) (Math.sqrt(3) / 2 * hexHeight);
             int vertDist = hexHeight * 3 / 4;
 
-            // Przekształcenie współrzędnych kliknięcia na współrzędne siatki hex
-            int mouseX = e.getX() - PADDING; // Adjust for padding
-            int mouseY = e.getY() - PADDING; // Adjust for padding
+            int mouseX = e.getX() - PADDING;
+            int mouseY = e.getY() - PADDING;
 
-            // Znajdź najbliższy heksagon
             int closestX = -1;
             int closestY = -1;
             double minDistance = Double.MAX_VALUE;
@@ -192,7 +193,6 @@ public class WorldPanel extends JPanel {
                     int px = x * hexWidth + (y % 2) * (hexWidth / 2);
                     int py = y * vertDist;
 
-                    // Odległość od środka heksagonu
                     double distance = Math.sqrt(Math.pow(mouseX - px, 2) + Math.pow(mouseY - py, 2));
 
                     if (distance < minDistance) {
@@ -203,7 +203,7 @@ public class WorldPanel extends JPanel {
                 }
             }
 
-            if (closestX >= 0 && closestX < world.getWidth() && closestY >= 0 && closestY < world.getHeight()) {
+            if (closestX >= 0 && closestX < world.getWidth() && closestY < world.getHeight()) {
                 selectedCell = new Point(closestX, closestY);
                 repaint();
                 showOrganismModal(closestX, closestY);
@@ -220,6 +220,7 @@ public class WorldPanel extends JPanel {
         }
     }
 
+    // Configures actions for main control buttons
     private void configureButtonActions() {
         nextTurnButton.addActionListener(e -> {
             world.handleNextTurn();
@@ -233,13 +234,14 @@ public class WorldPanel extends JPanel {
         });
     }
 
+    // Updates GUI after a turn is made
+    public void updateAfterTurn() {
+        turnLabel.setText("Turn: " + world.getRoundNumber());
+        updateControlPanel();
+        repaint();
+    }
 
-  public void updateAfterTurn() {
-      turnLabel.setText("Turn: " + world.getRoundNumber());
-      updateControlPanel();
-      repaint();
-  }
-
+    // Creates the D-Pad panel for movement controls
     private JPanel createDPadPanel() {
         JPanel dpad = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -262,6 +264,7 @@ public class WorldPanel extends JPanel {
         return dpad;
     }
 
+    // Updates the control panel with buttons and labels
     private void updateControlPanel() {
         buttonPanel.remove(nextTurnButton);
         buttonPanel.remove(dpadPanel);
@@ -293,6 +296,7 @@ public class WorldPanel extends JPanel {
         buttonPanel.repaint();
     }
 
+    // Configures the special ability button
     private void configureSpecialButton(boolean enabled, String text, Color color, int cooldown) {
         specialButton.setEnabled(enabled);
         specialButton.setText(text);
@@ -305,7 +309,7 @@ public class WorldPanel extends JPanel {
         }
     }
 
-
+    // Creates a button for a movement direction
     private JButton createDirectionButton(String label, HumanMove move) {
         JButton button = new JButton(label);
         button.addActionListener(e -> {
@@ -316,6 +320,7 @@ public class WorldPanel extends JPanel {
         return button;
     }
 
+    // Draws organisms on a square board
     private void drawOrganisms(Graphics g) {
         List<Organism> organisms = world.getOrganisms();
         for (Organism organism : organisms) {
@@ -327,6 +332,7 @@ public class WorldPanel extends JPanel {
         }
     }
 
+    // Draws an organism image on the board
     private void drawOrganismImage(Graphics g, Organism organism, int x, int y) {
         Image image = loadOrganismImage(organism);
         if (image != null) {
@@ -334,6 +340,7 @@ public class WorldPanel extends JPanel {
         }
     }
 
+    // Loads an image for a given organism
     private Image loadOrganismImage(Organism organism) {
         String resourcePath = "/resources/" + organism.toString() + ".png";
         java.net.URL imageUrl = getClass().getResource(resourcePath);
@@ -344,6 +351,7 @@ public class WorldPanel extends JPanel {
         return null;
     }
 
+    // Shows a modal dialog to add or delete an organism
     private void showOrganismModal(int x, int y) {
         JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Add organism", true);
         dialog.setLayout(new GridLayout(0, 3, 5, 5));
@@ -364,6 +372,7 @@ public class WorldPanel extends JPanel {
         dialog.setVisible(true);
     }
 
+    // Creates a panel for a single organism in the modal dialog
     private JPanel createOrganismPanel(String organismName, int x, int y, JDialog dialog) {
         JPanel organismPanel = new JPanel(new BorderLayout());
         organismPanel.setBackground(Color.WHITE);
@@ -397,6 +406,7 @@ public class WorldPanel extends JPanel {
         return organismPanel;
     }
 
+    // Loads an icon for a given organism name
     private ImageIcon loadOrganismIcon(String organismName) {
         String imagePath = "/resources/" + organismName + ".png";
         java.net.URL imageUrl = getClass().getResource(imagePath);
@@ -410,6 +420,7 @@ public class WorldPanel extends JPanel {
         return new ImageIcon();
     }
 
+    // Creates an organism instance by name and position
     private Organism createOrganismByName(String name, Point position) {
         Organism existingOrganism = world.getOrganismAt(position);
         if (existingOrganism != null) {

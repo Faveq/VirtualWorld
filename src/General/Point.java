@@ -13,21 +13,12 @@ public class Point {
         return this.x == point.x && this.y == point.y;
     }
 
-    public boolean notEquals(Point point) {
-        return !equals(point);
-    }
-
     public Point add(Point point) {
         return new Point(this.x + point.x, this.y + point.y);
     }
 
     public Point subtract(Point point) {
         return new Point(this.x - point.x, this.y - point.y);
-    }
-
-    public void addInPlace(Point point) {
-        this.x += point.x;
-        this.y += point.y;
     }
 
     public boolean beyondBorders(int width, int height) {
