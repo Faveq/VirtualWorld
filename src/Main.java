@@ -29,7 +29,6 @@ public class Main {
 
         ArrayList<Organism> organisms = new ArrayList<>();
         organisms.add(new Sheep(new Point(7, 7)));
-        organisms.add(new Human(new Point(12, 7)));
 
         world = new World(width, height, organisms, boardType);
     }

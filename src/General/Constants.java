@@ -6,7 +6,7 @@ public class Constants {
 
 
     // Human
-    public static final int HUMAN_STRENGTH = 1;
+    public static final int HUMAN_STRENGTH = 5;
     public static final int HUMAN_INITIATIVE = 4;
     public static final String HUMAN_GRAPHIC_REPRESENTATION =  "H";
     public static final int HUMAN_SPECIAL_MOVE_COOLDOWN = 5;

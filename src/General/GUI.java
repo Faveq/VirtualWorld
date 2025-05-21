@@ -175,51 +175,6 @@ public class GUI extends JPanel {
     }
 
     // Handles click event on the board grid
-//    private void handleGridClick(MouseEvent e) {
-//        if (world.getBoardType() == BoardType.HEX) {
-//            int hexHeight = CELL_SIZE;
-//            int hexWidth = (int) (Math.sqrt(3) / 2 * hexHeight);
-//            int vertDist = hexHeight * 3 / 4;
-//
-//            int mouseX = e.getX() - PADDING;
-//            int mouseY = e.getY() - PADDING;
-//
-//            int closestX = -1;
-//            int closestY = -1;
-//            double minDistance = Double.MAX_VALUE;
-//
-//            for (int y = 0; y < world.getHeight(); y++) {
-//                for (int x = 0; x < world.getWidth(); x++) {
-//                    int px = x * hexWidth + (y % 2) * (hexWidth / 2);
-//                    int py = y * vertDist;
-//
-//                    double distance = Math.sqrt(Math.pow(mouseX - px, 2) + Math.pow(mouseY - py, 2));
-//
-//                    if (distance < minDistance) {
-//                        minDistance = distance;
-//                        closestX = x;
-//                        closestY = y;
-//                    }
-//                }
-//            }
-//
-//            if (closestX >= 0 && closestX < world.getWidth() && closestY < world.getHeight()) {
-//                selectedCell = new Point(closestX, closestY);
-//                repaint();
-//                showOrganismModal(closestX, closestY);
-//            }
-//        } else {
-//            int x = e.getX() / CELL_SIZE;
-//            int y = e.getY() / CELL_SIZE;
-//
-//            if (x >= 0 && x < world.getWidth() && y >= 0 && y < world.getHeight()) {
-//                selectedCell = new Point(x, y);
-//                repaint();
-//                showOrganismModal(x, y);
-//            }
-//        }
-//    }
-
     private void handleGridClick(MouseEvent e) {
         int x, y;
 

@@ -74,7 +74,7 @@ public class Animal extends Organism {
             return;
         }
 
-        if (!getGraphicRepresentation().equals(Constants.WOLF_GRAPHIC_REPRESENTATION)) {
+//        if (!getGraphicRepresentation().equals(Constants.WOLF_GRAPHIC_REPRESENTATION)) {
             do {
                 Random random = new Random();
 
@@ -87,7 +87,7 @@ public class Animal extends Organism {
                     (hasGoodSmell() && collidingOrganism != null && collidingOrganism.compareTo(this) > 0));
 
             move(shift);
-        }
+//        }
     }
 
     protected void move(Point shift) {

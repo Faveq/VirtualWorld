@@ -26,7 +26,6 @@ public class World {
         this.logs = new ArrayList<>();
         this.organisms = new ArrayList<>();
 
-        // Java equivalent of srand
     }
 
     public boolean getIsHumanAlive() {
